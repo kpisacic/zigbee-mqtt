@@ -1,0 +1,28 @@
+services:
+  mosquitto:
+    image: eclipse-mosquitto:2
+    container_name: mosquitto
+    restart: unless-stopped
+    ports:
+      - "1883:1883"   # MQTT
+      - "9001:9001"   # MQTT over websockets (for a browser dashboard later)
+    volumes:
+      - /mnt/dietpi_userdata/zigbee-mqtt/mosquitto/config:/mosquitto/config
+      - /mnt/dietpi_userdata/zigbee-mqtt/mosquitto/data:/mosquitto/data
+      - /mnt/dietpi_userdata/zigbee-mqtt/mosquitto/log:/mosquitto/log
+
+  zigbee2mqtt:
+    image: koenkk/zigbee2mqtt:latest
+    container_name: zigbee2mqtt
+    restart: unless-stopped
+    depends_on:
+      - mosquitto
+    devices:
+      - /dev/serial/by-id/usb-dresden_elektronik_ingenieurtechnik_GmbH_ConBee_II_DE2122355-if00:/dev/ttyACM0
+    volumes:
+      - /mnt/dietpi_userdata/zigbee-mqtt/zigbee2mqtt/data:/app/data
+      - /run/udev:/run/udev:ro
+    environment:
+      - TZ=Europe/Zagreb
+    ports:
+      - "8085:8080"   # Zigbee2MQTT's built-in frontend

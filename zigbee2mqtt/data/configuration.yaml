@@ -1,0 +1,21 @@
+mqtt:
+  server: mqtt://mosquitto:1883
+  user: z2m
+  password: CHANGE_ME
+
+serial:
+  port: /dev/ttyACM0
+  adapter: deconz
+
+frontend:
+  port: 8080
+
+homeassistant: false
+permit_join: false
+
+advanced:
+  # Fresh network: Z2M generates secure random values on first start.
+  pan_id: GENERATE
+  ext_pan_id: GENERATE
+  network_key: GENERATE
+  log_level: info
